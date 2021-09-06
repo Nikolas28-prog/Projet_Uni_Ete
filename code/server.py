@@ -50,7 +50,7 @@ def client_thread(clientsocket,n):
 
 time.sleep(1)
 wifi = WLAN()
-wifi.init(mode=WLAN.AP, ssid="hello", auth=None, channel=1)
+wifi.init(mode=WLAN.AP, ssid="chatinovic", auth=None, channel=4)
 print("WiFi is up!")
 time.sleep(1)
 pycom.heartbeat(False)
