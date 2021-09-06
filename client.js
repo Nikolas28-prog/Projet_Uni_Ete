@@ -1,7 +1,7 @@
 var x=0
 var y=0
 
-setInterval(httpGetAsync, 100);
+// setInterval(httpGetAsync, 100);
 
 function httpGetAsync()
 {
@@ -190,15 +190,24 @@ app.ticker.add((delta) => {
         );
     }
 
-    greenSquare.x +=1;
+    greenSquare.x +=0.1;
     greenSquare.y += greenSquare.acceleration.y * delta;
 
-    redSquare.x +=y*20;
-    redSquare.y += x*20;
+    redSquare.x +=y*20*redSquare.acceleration.x;
+    redSquare.y += x*20*redSquare.acceleration.y;
+
+    for(let i=1;i<app.stage.children.length;i++){
+        if(testForAABB(redSquare, app.stage.children[i])){
+            console.log("collided")
+        }
+        
+    }
 });
 
 // Add to stage
 app.stage.addChild(redSquare);
-app.stage.addChild(greenSquare);
 for(let i=0;i<3;i++){
+    app.stage.addChild(greenSquare);
 }
+
+// app.stage.removeChildAt(1)
