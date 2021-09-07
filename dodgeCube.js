@@ -11,7 +11,7 @@ function isCollinding(object1, object2) {
         && bounds1.y + bounds1.height > bounds2.y;
 }
 
-const player = new PIXI.Sprite.from("alien.png");
+const player = new PIXI.Sprite.from("assets/alien.png");
 player.anchor.set(0.5)
 player.position.set(app.screen.width / 2, app.screen.height / 2);
 player.width = 100;
@@ -22,10 +22,12 @@ let projectiles = []
 
 function update(delta) {
 
-    const mouseCoords = app.renderer.plugins.interaction.mouse.global;
+    // const mouseCoords = app.renderer.plugins.interaction.mouse.global;
 
-    player.x = mouseCoords.x;
-    player.y = mouseCoords.y;
+    // player.x = mouseCoords.x;
+    // player.y = mouseCoords.y;
+    player.x+=y*10
+    player.y+=x*10
 
     //handle walls
     if (player.x > app.screen.width - 50) {
@@ -149,7 +151,7 @@ healthBar.health = health.width;
 
 function addHealth(hp) {
     health.width += hp
-    if (health.width < 0) {
+    if (health.width <= 0) {
         health.width = 0;
         clearInterval(interval)
         alert("you dead")
