@@ -11,23 +11,26 @@ function isCollinding(object1, object2) {
         && bounds1.y + bounds1.height > bounds2.y;
 }
 
-const player = new PIXI.Sprite.from("assets/alien.png");
-player.anchor.set(0.5)
-player.position.set(app.screen.width / 2, app.screen.height / 2);
-player.width = 100;
-player.height = 100;
+
 // player.tint = '0xFF0000';
 
 let projectiles = []
 
+let interval;
+var player;
+var healthBar;
+var health;
+var start_time;
+var richText;
+
 function update(delta) {
 
-    // const mouseCoords = app.renderer.plugins.interaction.mouse.global;
+    const mouseCoords = app.renderer.plugins.interaction.mouse.global;
 
-    // player.x = mouseCoords.x;
-    // player.y = mouseCoords.y;
-    player.x+=y*10
-    player.y+=x*10
+    player.x = mouseCoords.x;
+    player.y = mouseCoords.y;
+    // player.x+=y*10
+    // player.y+=x*10
 
     //handle walls
     if (player.x > app.screen.width - 50) {
@@ -55,8 +58,10 @@ function update(delta) {
             console.log("collision")
             if (projectiles[i].heal) {
                 addHealth(10)
+                player.green += 1
             } else {
                 addHealth(-30)
+                player.red += 1
             }
             app.stage.removeChild(projectiles[i])
             projectiles.splice(i, 1)
@@ -98,10 +103,10 @@ function createProjectile() {
     projectile.position.set(x, y);
     let a = random(-4, 4);
     let b = random(-4, 4);
-    if(Math.abs(a) < 2)
-    a=3
-    if(Math.abs(b) < 2)
-    b=3
+    if (Math.abs(a) < 2)
+        a = 3
+    if (Math.abs(b) < 2)
+        b = 3
     projectile.speedX = a
     projectile.speedY = b
 
@@ -124,38 +129,99 @@ function createProjectile() {
     return projectile
 }
 
-// Add to stage
-app.stage.addChild(player);
-// Listen for animate update
-app.ticker.add(update);
-let interval = setInterval(createProjectile, 300);
-app.stage.addChild(player)
-
-const healthBar = new PIXI.Container();
-healthBar.position.set(10, 10)
-app.stage.addChild(healthBar);
 
 
-let border = new PIXI.Graphics();
-border.lineStyle(10, 0xFFFFFF, 1, 1, true);
-border.drawRect(0, 0, 101, 31);
-healthBar.addChild(border);
-
-let health = new PIXI.Graphics();
-health.beginFill(0x00FF00);
-health.drawRect(0, 1, 100, 30);
-health.endFill();
-healthBar.addChild(health);
-
-healthBar.health = health.width;
 
 function addHealth(hp) {
     health.width += hp
     if (health.width <= 0) {
         health.width = 0;
-        clearInterval(interval)
-        alert("you dead")
+        gameOver()
     } else if (health.width > 100) {
         health.width = 100;
     }
+}
+
+
+function format(i) {
+    if (i < 10) {
+        i = "0" + i;
+    }
+    return i;
+}
+
+
+function start() {
+
+    healthBar = new PIXI.Container();
+    healthBar.position.set(10, 10)
+
+
+    let border = new PIXI.Graphics();
+    border.lineStyle(10, 0xFFFFFF, 1, 1, true);
+    border.drawRect(0, 0, 101, 31);
+    healthBar.addChild(border);
+
+    health = new PIXI.Graphics();
+    health.beginFill(0x00FF00);
+    health.drawRect(0, 1, 100, 30);
+    health.endFill();
+    healthBar.addChild(health);
+
+    healthBar.health = health.width;
+
+    player = new PIXI.Sprite.from("assets/alien.png");
+    player.anchor.set(0.5)
+    player.position.set(app.screen.width / 2, app.screen.height / 2);
+    player.width = 100;
+    player.height = 100;
+    player.red = 0
+    player.green = 0
+    // Add to stage
+    app.stage.addChild(player);
+    // Listen for animate update
+    app.ticker.add(update);
+    interval = setInterval(createProjectile, 300);
+    app.stage.addChild(healthBar);
+    start_time = new Date();
+
+    if(richText){
+        app.stage.removeChild(richText)
+    }
+}
+
+function gameOver() {
+
+    clearInterval(interval)
+    app.stage.removeChild(player)
+    app.stage.removeChild(healthBar)
+
+    const style = new PIXI.TextStyle({
+        fontFamily: 'pokemon',
+        fontSize: 36,
+        // fontStyle: 'italic',
+        // fontWeight: 'bold',
+        fill: ['#ffffff', '#00ff99'], // gradient
+        stroke: '#4a1850',
+        strokeThickness: 5,
+        dropShadow: true,
+        dropShadowColor: '#000000',
+        dropShadowBlur: 4,
+        dropShadowAngle: Math.PI / 6,
+        dropShadowDistance: 6,
+        wordWrap: true,
+        wordWrapWidth: 440,
+        lineJoin: 'round',
+    });
+
+    let diff = new Date(new Date() - start_time)
+    let m = format(diff.getMinutes())
+    let s = format(diff.getSeconds())
+
+    richText = new PIXI.Text('GAME OVER\ntime :' + m + ":" + s + '\nhits: ' + player.red + '\nheals: ' + player.green + '\npress button to play again', style);
+    richText.x = app.screen.width / 2;
+    richText.y = app.screen.height / 2;
+    richText.anchor.set(0.5)
+    app.stage.addChild(richText);
+
 }

@@ -43,8 +43,8 @@ def client_thread(clientsocket,n):
     if "GET / " in str(r):
         print("sending data")
         clientsocket.send(header)
-        clientsocket.send(json.dumps(list(acc.acceleration())+[acc.roll()]+[acc.pitch()]))
-
+        clientsocket.send(json.dumps(list(acc.acceleration())+[py.button_pressed()]))
+        
     
     # Close the socket and terminate the thread
     clientsocket.close()
