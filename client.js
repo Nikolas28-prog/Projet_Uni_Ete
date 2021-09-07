@@ -11,8 +11,12 @@ function httpGetAsync() {
             x = data[1]
             y = data[0]
             button = data[3]
+            // if(button){
+            //     start()
+            //     button=false
+            // }
 
-            // console.log(data)
+            console.log(data)
         }
     }
     xmlHttp.open("GET", "http://192.168.4.1", true); // true for asynchronous 

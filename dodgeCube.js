@@ -1,5 +1,9 @@
 const app = new PIXI.Application({ backgroundColor: 0x111111 });
 document.body.appendChild(app.view);
+// app.stage.addChild()
+
+
+
 
 function isCollinding(object1, object2) {
     const bounds1 = object1.getBounds();
@@ -12,8 +16,6 @@ function isCollinding(object1, object2) {
 }
 
 
-// player.tint = '0xFF0000';
-
 let projectiles = []
 
 let interval;
@@ -22,8 +24,19 @@ var healthBar;
 var health;
 var start_time;
 var richText;
+var welcomeText;
+const style = new PIXI.TextStyle({
+    fontFamily: 'pokemon',
+    fontSize: 36,
+    fill: ['#ffffff', '#00ff99'], // gradient
+});
 
 function update(delta) {
+
+    // if(button){
+    //     start()
+    //     button=false;
+    // }
 
     const mouseCoords = app.renderer.plugins.interaction.mouse.global;
 
@@ -188,6 +201,9 @@ function start() {
     if(richText){
         app.stage.removeChild(richText)
     }
+    if(welcomeText){
+        app.stage.removeChild(welcomeText)
+    }
 }
 
 function gameOver() {
@@ -196,32 +212,20 @@ function gameOver() {
     app.stage.removeChild(player)
     app.stage.removeChild(healthBar)
 
-    const style = new PIXI.TextStyle({
-        fontFamily: 'pokemon',
-        fontSize: 36,
-        // fontStyle: 'italic',
-        // fontWeight: 'bold',
-        fill: ['#ffffff', '#00ff99'], // gradient
-        stroke: '#4a1850',
-        strokeThickness: 5,
-        dropShadow: true,
-        dropShadowColor: '#000000',
-        dropShadowBlur: 4,
-        dropShadowAngle: Math.PI / 6,
-        dropShadowDistance: 6,
-        wordWrap: true,
-        wordWrapWidth: 440,
-        lineJoin: 'round',
-    });
-
     let diff = new Date(new Date() - start_time)
     let m = format(diff.getMinutes())
     let s = format(diff.getSeconds())
 
-    richText = new PIXI.Text('GAME OVER\ntime :' + m + ":" + s + '\nhits: ' + player.red + '\nheals: ' + player.green + '\npress button to play again', style);
+    richText = new PIXI.Text('GAME OVER\ntime: ' + m + ":" + s + '\nhits: ' + player.red + '\nheals: ' + player.green + '\npress button to play again', style);
     richText.x = app.screen.width / 2;
     richText.y = app.screen.height / 2;
     richText.anchor.set(0.5)
     app.stage.addChild(richText);
 
 }
+
+welcomeText = new PIXI.Text('Press button to start game', style);
+welcomeText.x = app.screen.width / 2;
+welcomeText.y = app.screen.height / 2;
+welcomeText.anchor.set(0.5)
+app.stage.addChild(welcomeText);
