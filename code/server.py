@@ -36,8 +36,9 @@ def client_thread(clientsocket,n):
         clientsocket.close()
         return
     else:
+        ...
         # Do something wth the received data...
-        print("Received: {}".format(str(r))) #uncomment this line to view the HTTP request
+        # print("Received: {}".format(str(r))) #uncomment this line to view the HTTP request
 
     if "GET / " in str(r):
         print("sending data")
