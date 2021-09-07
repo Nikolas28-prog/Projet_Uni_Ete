@@ -1,8 +1,5 @@
 const app = new PIXI.Application({ backgroundColor: 0x111111 });
 document.body.appendChild(app.view);
-// app.stage.addChild()
-
-
 
 
 function isCollinding(object1, object2) {
@@ -15,9 +12,8 @@ function isCollinding(object1, object2) {
         && bounds1.y + bounds1.height > bounds2.y;
 }
 
-
+var playing=false;
 let projectiles = []
-
 let interval;
 var player;
 var healthBar;
@@ -33,17 +29,18 @@ const style = new PIXI.TextStyle({
 
 function update(delta) {
 
-    // if(button){
-    //     start()
-    //     button=false;
-    // }
+    if(button&&!playing){ //play again
+        start()
+        button=false;
+        playing=true
+    }
 
-    const mouseCoords = app.renderer.plugins.interaction.mouse.global;
+    // const mouseCoords = app.renderer.plugins.interaction.mouse.global;
 
-    player.x = mouseCoords.x;
-    player.y = mouseCoords.y;
-    // player.x+=y*10
-    // player.y+=x*10
+    // player.x = mouseCoords.x;
+    // player.y = mouseCoords.y;
+    player.x+=y*10
+    player.y+=x*10
 
     //handle walls
     if (player.x > app.screen.width - 50) {
@@ -64,11 +61,11 @@ function update(delta) {
         projectiles[i].position.y -= projectiles[i].speedY;
         //update destruction
         if (isOutOfScreen(projectiles[i])) {
-            console.log("leaved screen")
+            // console.log("leaved screen")
             app.stage.removeChild(projectiles[i])
             projectiles.splice(i, 1)
-        } else if (isCollinding(player, projectiles[i])) {
-            console.log("collision")
+        } else if (playing&&isCollinding(player, projectiles[i])) {
+            // console.log("collision")
             if (projectiles[i].heal) {
                 addHealth(10)
                 player.green += 1
@@ -207,7 +204,8 @@ function start() {
 }
 
 function gameOver() {
-
+    
+    playing=false
     clearInterval(interval)
     app.stage.removeChild(player)
     app.stage.removeChild(healthBar)
