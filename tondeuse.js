@@ -6,6 +6,8 @@ var ended = false;
 const app = new PIXI.Application({ width: 600, height: 600 });
 document.body.appendChild(app.view);
 const { stage } = app;
+var width = app.screen.width;
+var height = app.screen.height;
 
 
 // prepare rectangle texture, that will be our brush to clean the garden
@@ -14,12 +16,8 @@ brush.beginFill('0xffffff');
 brush.drawRect(0, 0, 30, 30);
 brush.endFill();
 
-//create 2D array to keep trace of where the TONDEUSE goes.
-var width = app.screen.width;
-var height = app.screen.height;
-// var mapcol = new Array(20).fill(false);
-// var map = new Array(20).fill(mapcol);
 
+//create 2D array to keep trace of where the TONDEUSE goes.
 var map;
 function initArray(){
     map =new Array(20);
@@ -34,6 +32,7 @@ function initArray(){
 }
 initArray();
 
+//imgs to load
 app.loader.add('t1', '/assets/grass.jpg');
 app.loader.add('t2', 'assets/rock.jpg');
 app.loader.add('t3', 'assets/tondeuse.png');
@@ -50,7 +49,7 @@ function setup(loader, resources) {
     stage.addChild(imageToReveal);
     imageToReveal.width = app.screen.width;
     imageToReveal.height = app.screen.height;
-    //create mower img
+    //create mower img and child it to the brush
     tondeuse = new PIXI.Sprite(resources.t3.texture);
     tondeuse.position.set(0, 0);
     tondeuse.width = 30;
@@ -65,14 +64,14 @@ function setup(loader, resources) {
     app.stage.interactive = true;
     app.ticker.add(update);
 }
-
+//walls
 function checkTondeusePos(tondeuse) {
     if (tondeuse.y > app.screen.height - 30) tondeuse.y = app.screen.height - 30;
     if (tondeuse.y < 0) tondeuse.y = 0;
     if (tondeuse.x < 0) tondeuse.x = 0;
     if (tondeuse.x > app.screen.width - 30) tondeuse.x = app.screen.width - 30;
 }
-
+//check if the background is fully painted
 function isPainted() {
     for (let i = 0; i < 20; i++) {
         for (let j = 0; j < 20; j++) {
@@ -84,30 +83,36 @@ function isPainted() {
     ended = true;
     return true
 }
+//line used in tests, to move la tondeuse with mouse
+//const mouseCoords = app.renderer.plugins.interaction.mouse.global;
 
-const mouseCoords = app.renderer.plugins.interaction.mouse.global;
 
+function resetGame(){
+    initArray();
+    ended=false;
+    location.reload();
+
+
+}
 function update() {
-    if (ended) {
-        //array map init
-        initArray();
-        
-        ended = false;
-        console.log("C'est quand même bien mieux des cailloux non ?");
-        alert("bah oui");
-        location.reload();
-        //app.loader.load(setup);
+    if (ended) {//reset game
+        alert("C'est quand même bien mieux des cailloux non ?");
+        resetGame();
     }
-    tondeuse.x = mouseCoords.x;
-    tondeuse.y = mouseCoords.y;
+
+    tondeuse.x += y*10;
+    tondeuse.y += x*10;
+    //alternative to move tondeuse with mouse
+    // tondeuse.x = mouseCoords.x;
+    // tondeuse.y = mouseCoords.y;
     checkTondeusePos(tondeuse); //walls
     brush.x = tondeuse.x;
     brush.y = tondeuse.y;
-
+    //paint over first image with second image, under our tondeuse obj
     fill(tondeuse.x, tondeuse.y)
     app.renderer.render(brush, renderTexture, false, null, false);
 }
-
+//fill our bool 2d arr to keep trace of tondeuse path
 function fill(x, y) {
     map[Math.floor(Math.floor(x) / 30)][Math.floor(Math.floor(y) / 30)] = true
 }
