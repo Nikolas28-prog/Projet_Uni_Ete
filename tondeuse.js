@@ -66,8 +66,8 @@ function checkTondeusePos(tondeuse){
 }
 
 function updateWay(){
-    for (var i =tondeuse.x;i<tondeuse.x+35;i++){
-        for (var j=tondeuse.y;j<tondeuse.y+35;j++){
+    for (var i =Math.ceil(tondeuse.x);i<tondeuse.x+35;i++){
+        for (var j=Math.ceil(tondeuse.y);j<tondeuse.y+35;j++){
             map[i][j]=true;
         }
     }
