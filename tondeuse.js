@@ -20,15 +20,19 @@ var height = app.screen.height;
 // var mapcol = new Array(20).fill(false);
 // var map = new Array(20).fill(mapcol);
 
-var map = new Array(20);
-
-for (let i = 0; i < 20; i++) {
-    map[i] = new Array(20);
-    for (let j = 0; j < 20; j++) {
-        map[i][j] = false
+var map;
+function initArray(){
+    map =new Array(20);
+    
+    for (let i = 0; i < 20; i++) {
+        map[i] = new Array(20);
+        for (let j = 0; j < 20; j++) {
+            map[i][j] = false
+        }
     }
-}
 
+}
+initArray();
 
 app.loader.add('t1', '/assets/grass.jpg');
 app.loader.add('t2', 'assets/rock.jpg');
@@ -36,7 +40,6 @@ app.loader.add('t3', 'assets/tondeuse.png');
 
 app.loader.load(setup);
 function setup(loader, resources) {
-
     //create first plan image 
     const backgfloor = new PIXI.Sprite(resources.t1.texture);
     stage.addChild(backgfloor);
@@ -54,6 +57,7 @@ function setup(loader, resources) {
     tondeuse.height = 30;
     brush.addChild(tondeuse);
     app.stage.addChild(tondeuse);
+    
     renderTexture = PIXI.RenderTexture.create(app.screen.width, app.screen.height);
     const renderTextureSprite = new PIXI.Sprite(renderTexture);
     stage.addChild(renderTextureSprite);
@@ -85,11 +89,14 @@ const mouseCoords = app.renderer.plugins.interaction.mouse.global;
 
 function update() {
     if (ended) {
+        //array map init
+        initArray();
+        
         ended = false;
         console.log("C'est quand même bien mieux des cailloux non ?");
-        // location.reload();
+        alert("bah oui");
+        location.reload();
         //app.loader.load(setup);
-        //resetArray();
     }
     tondeuse.x = mouseCoords.x;
     tondeuse.y = mouseCoords.y;
