@@ -1,11 +1,13 @@
 // based on the exemple scratchCard of pixiJS
 
+
 var tondeuse;
 var renderTexture;
 var ended=false;
 const app = new PIXI.Application();
 document.body.appendChild(app.view);
 const { stage } = app;
+const mouseCoords = app.renderer.plugins.interaction.mouse.global;
 
 // prepare rectangle texture, that will be our brush to clean the garden
 const brush = new PIXI.Graphics();
@@ -16,8 +18,10 @@ brush.endFill();
 //create 2D array to keep trace of where the TONDEUSE goes.
 var width = app.screen.width;
 var height = app.screen.height;
-var mapcol =new Array(height).fill(false);
-var map = new Array(width).fill(mapcol);
+var map=[],mapcol;
+
+var map=[],mapcol;
+while(map.push(mapcol=[])<width)while (mapcol.push(false)<height);
 
 app.loader.add('t1', '/assets/grass.jpg');
 app.loader.add('t2', 'assets/rock.jpg');
@@ -51,7 +55,7 @@ function setup(loader, resources) {
     stage.addChild(renderTextureSprite);
     imageToReveal.mask = renderTextureSprite;
 
-    
+
     app.stage.interactive = true;  
     
     
@@ -59,46 +63,53 @@ function setup(loader, resources) {
 }
 
 function checkTondeusePos(tondeuse){
-    if(tondeuse.y>app.screen.height-37)tondeuse.y=app.screen.height-37;
+    if(tondeuse.y>app.screen.height-35)tondeuse.y=app.screen.height-35;
     if(tondeuse.y<0)tondeuse.y=0;
     if(tondeuse.x<0)tondeuse.x=0;
-    if(tondeuse.x>app.screen.width-37)tondeuse.x=app.screen.width-37;
+    if(tondeuse.x>app.screen.width-35)tondeuse.x=app.screen.width-35;
 }
 
 function updateWay(){
-    for (var i =Math.ceil(tondeuse.x);i<tondeuse.x+35;i++){
-        for (var j=Math.ceil(tondeuse.y);j<tondeuse.y+35;j++){
+    for (var i =Math.round(tondeuse.x);i<tondeuse.x+35;i++){
+        for (var j=Math.round(tondeuse.y);j<tondeuse.y+35;j++){
             map[i][j]=true;
         }
     }
 }
 
 function checkEnd(){
+    var cmpt=0;
     for (var i =0; i<width;i++){
         if(!map[i].includes(false)){
-            ended=true;
+            cmpt+=1;;
+        }
+        else if(cmpt>790){
+            console.log(i);
         }
     }
+    if(cmpt==width)ended=true;
+    return cmpt;
 }
 
-// function  resetArray(){
-//     mapcol =new Array(height).fill(false);
-//     map = new Array(width).fill(mapcol);
-//}
+
 function update(){
     if(ended){
         ended=false;
         alert("C'est quand même bien mieux des cailloux non ?");
-        location.reload();
-        //app.loader.load(setup);
-        //resetArray();
+        //location.reload();
+        app.loader.load(setup);
     }
-    tondeuse.x += y*10;
-    tondeuse.y += x*10;
+    //tondeuse.x += y*10;
+    //tondeuse.y += x*10;
+
+    tondeuse.x = mouseCoords.x;
+    tondeuse.y = mouseCoords.y;
+
     checkTondeusePos(tondeuse);
     brush.x=tondeuse.x;
     brush.y=tondeuse.y;
     updateWay();
+    checkEnd();
     app.renderer.render(brush, renderTexture, false, null, false);
 }
 
