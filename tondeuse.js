@@ -84,7 +84,7 @@ function checkEnd(){
 // function  resetArray(){
 //     mapcol =new Array(height).fill(false);
 //     map = new Array(width).fill(mapcol);
-}
+//}
 function update(){
     if(ended){
         ended=false;
