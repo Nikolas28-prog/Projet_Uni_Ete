@@ -5323,6 +5323,7 @@ var PIXI = (function (exports) {
    *        this is mostly to ignore internal deprecation calls.
    */
   function deprecation(version, message, ignoreDepth) {
+      return
       if (ignoreDepth === void 0) { ignoreDepth = 3; }
       // Ignore duplicat
       if (warnings[message]) {
