@@ -83,7 +83,7 @@ function isPainted() {
     return true
 }
 //line used in tests, to move la tondeuse with mouse
-const mouseCoords = app.renderer.plugins.interaction.mouse.global;
+//const mouseCoords = app.renderer.plugins.interaction.mouse.global;
 
 
 function resetGame(){
@@ -102,8 +102,8 @@ function update() {
     tondeuse.x += y*10;
     tondeuse.y += x*10;
     //alternative to move tondeuse with mouse
-     tondeuse.x = mouseCoords.x;
-     tondeuse.y = mouseCoords.y;
+    //tondeuse.y = mouseCoords.y;
+    //tondeuse.x = mouseCoords.x;
     checkTondeusePos(tondeuse); //walls
     brush.x = tondeuse.x;
     brush.y = tondeuse.y;
