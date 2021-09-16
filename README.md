@@ -1,4 +1,4 @@
-# Le jeu des collègues
+# Hepiamote
 
 Florent DIDION, Nikolas Kosanovic, Thibault Chatillon
 
