@@ -1,4 +1,4 @@
-const app = new PIXI.Application({ backgroundColor: 0x111111 });
+const app = new PIXI.Application({ backgroundColor: 0x111111 ,width: 1200, height: 700});
 document.body.appendChild(app.view);
 
 
@@ -35,6 +35,8 @@ function update(delta) {
         playing = true
     }
 
+    
+
     // const mouseCoords = app.renderer.plugins.interaction.mouse.global;
 
     // player.x = mouseCoords.x;
@@ -56,6 +58,9 @@ function update(delta) {
     }
 
     for (let i = projectiles.length - 1; i >= 0; i--) {
+        if(!playing){
+            return
+        }
         //update positions
         projectiles[i].position.x -= projectiles[i].speedX;
         projectiles[i].position.y -= projectiles[i].speedY;
@@ -74,7 +79,7 @@ function update(delta) {
         } else if (playing && isCollinding(player, projectiles[i])) {
             // console.log("collision")
             if (projectiles[i].heal) {
-                addHealth(10)
+                addHealth(30)
                 player.green += 1
             } else {
                 addHealth(-30)
@@ -170,7 +175,7 @@ function format(i) {
 
 
 function start() {
-
+    // console.log("start !")
     healthBar = new PIXI.Container();
     healthBar.position.set(10, 10)
 
@@ -214,10 +219,16 @@ function start() {
 function gameOver() {
 
     playing = false
+    app.ticker.remove(update)
     clearInterval(interval)
-    app.stage.removeChild(player)
-    app.stage.removeChild(healthBar)
-
+    
+    //remove player,healthbar and projectiles
+    while(app.stage.children.length>0){
+        app.stage.removeChild(app.stage.children[0]) 
+    }
+    projectiles = []
+    
+    //engame stats
     let diff = new Date(new Date() - start_time)
     let m = format(diff.getMinutes())
     let s = format(diff.getSeconds())
